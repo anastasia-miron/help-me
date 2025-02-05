@@ -7,10 +7,4 @@ import { join } from "node:path";
 const app = new Hono();
 app.route("/api", route);
 
-console.log(join(__dirname, `./database.db`))
-
-
-
-console.log(route);
-
 export default app;

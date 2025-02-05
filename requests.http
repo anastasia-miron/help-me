@@ -1,0 +1,139 @@
+### Register
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "ghitz4",
+    "email": "john@doe.com",
+    "password": "qwe123"
+}
+
+
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "john@doe.com",
+    "password": "qwe123"
+}
+
+
+
+
+### Logout
+
+POST http://localhost:3000/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Profile
+
+GET http://localhost:3000/api/profile
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Profile Update
+POST  http://localhost:3000/api/auth/complete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "type": "volunteer",
+    "skills": "rapid si iute",
+    "availability": "24/24"
+}
+
+### Profile Update
+POST  http://localhost:3000/api/auth/complete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "type": "beneficiary",
+    "needs": "dupa cumparaturi",
+    "location": "Botanica"
+}
+
+### Profile DELETE
+DELETE  http://localhost:3000/api/profile
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Requests
+
+POST  http://localhost:3000/api/requests
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Requests GET
+GET  http://localhost:3000/api/requests
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Requests id
+GET http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update Requests id 
+PUT http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update Requests Id Review
+PUT http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/review
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST Requests Id Review
+POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/review
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### POST Requests Id Accept
+POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/accept
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST Requests Id Cancel
+POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/cancel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### POST Requests Id Complete
+POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/complete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET Volunteers
+GET http://localhost:3000/api/volunteers
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET Volunteers id
+GET http://localhost:3000/api/volunteers/225a3473-efa8-48aa-92ff-291eaf9fb39c 
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET Volunteers id requests
+GET http://localhost:3000/api/volunteers/225a3473-efa8-48aa-92ff-291eaf9fb39c/requests
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET Beneficiars
+GET http://localhost:3000/api/beneficiars
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET Beneficiars id
+GET http://localhost:3000/api/beneficiars/f605cf3c-36cd-40ac-b390-108135c6a82f
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET Beneficiars id requests
+GET http://localhost:3000/api/beneficiars/f605cf3c-36cd-40ac-b390-108135c6a82f/requests
+Content-Type: application/json
+Authorization: Bearer {{token}}

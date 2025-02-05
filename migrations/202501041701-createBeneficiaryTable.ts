@@ -6,7 +6,7 @@ export const up = async (db: Database) => {
             id TEXT PRIMARY KEY,
             user_id TEXT,
             needs TEXT,
-            location TEXT,
+            location TEXT
         );
     `);
 }
