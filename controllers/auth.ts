@@ -1,9 +1,11 @@
 import { type Context } from "hono";
 import jwt from "jsonwebtoken"
 
-import User from "../models/user";
+import User, { UserTypeEnum } from "../models/user";
 import { UserStatusEnum } from "../models/user";
 import { JWT_SECRET } from "../constants";
+import Beneficiary from "../models/beneficiary";
+import Volunteer from "../models/volunteer";
 
 
 export const register = async (c: Context) => {
@@ -63,9 +65,43 @@ export const logout = async (c: Context) => {
 }
 
 export const completeRegister = async (c: Context) => {
+    const body = await c.req.json();
     const currentUser = c.get('user');
+
     console.log(currentUser);
-    // TODO: Implement complete register logic
-    return c.json({ message: "Complete registration successful!", succes: true });
+
+    if (currentUser.type !== UserTypeEnum.NONE) {
+        return c.json({ message: "Cannot redefine user type", success: false });
+    }
+
+    currentUser.type = body.type;
+    currentUser.update();
+
+    if (body.type === "beneficiary") {
+       // Create beneficiary 
+       const entity = new Beneficiary();
+       entity.user_id = currentUser.id;
+       entity.needs = body.needs;
+       entity.location = body.location;
+       entity.create();
+
+
+       return c.json({ message: "Beneficiary registration successful!", succes: true, entity });
+    } 
+
+    if (body.type === "volunteer") {
+        // Create volunteer
+        const entity = new Volunteer();
+        entity.user_id = currentUser.id;
+        entity.skills = body.skills;
+        entity.availability = body.availability;
+        entity.create();
+
+        currentUser.type = UserTypeEnum.VOLUNTEER;
+        currentUser.update();
+
+        return c.json({ message: "Volunteer registration successful!", succes: true });
+    }
+    return c.json({ message: "Registration failed!", success: false });
 }
 

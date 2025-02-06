@@ -2,7 +2,7 @@ import type { Context, Next } from "hono";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../constants";
 import { getDatabase } from "../utils/database";
-import type User from "../models/user";
+import User from "../models/user";
 import type { UserTypeEnum } from "../models/user";
 
 export type LocalJwtPayload = {
@@ -34,7 +34,7 @@ export const jwtVerify = async (c: Context, next: Next) => {
         }
 
         const db = getDatabase();
-        const user = db.query<User, { id: string }>('SELECT * FROM users WHERE id = $id').get({ id: parsedPayload.id });
+        const user = db.query<User, { id: string }>('SELECT * FROM users WHERE id = $id').as(User).get({ id: parsedPayload.id });
         if (!user) {
             return c.json({ message: "Unauthorized", success: false });
         }

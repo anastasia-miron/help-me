@@ -41,7 +41,8 @@ class User {
     }
 
     create() {
-        db.query(`INSERT INTO users (id, email, password, username, is_verified, status, created_at) VALUES ($id, $email, $password, $username, $is_verified, $status, $created_at)`).run({
+        db.query(`INSERT INTO users (id, email, password, username, is_verified, status, created_at) VALUES ($id, $email, $password, $username, $is_verified, $status, $created_at)`)
+        .run({
             "id": this.id,
             "is_verified": false,
             "email": this.email,
@@ -50,6 +51,18 @@ class User {
             "status": this.status,
             "created_at": this.created_at.toISOString()
         })
+    }
+
+    update() {
+        db.query(`UPDATE users SET type=$type, status=$status, is_verified=$is_verified, profile_img=$profile_img, phone=$phone WHERE id = $id`)
+            .run({
+                "id": this.id,
+                "type": this.type,
+                "status": this.status,
+                "is_verified": this.is_verified,
+                "profile_img": this.profile_img,
+                "phone": this.phone
+            });
     }
 
     static getByEmail(email: string) {
