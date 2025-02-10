@@ -1,10 +1,10 @@
 import { getDatabase } from "../utils/database";
-import { randomUUIDv7 } from "bun";
+import {v4} from "uuid";
 
 const db = getDatabase();
 
 class Beneficiary {
-    public id: string = randomUUIDv7();
+    public id: string = v4();
     public user_id: string = "";
     public needs: string = "";
     public location: string = "";
@@ -18,8 +18,14 @@ class Beneficiary {
                 "location": this.location!
             })
     }
+    static findAll() {
+        return db.query(`SELECT * FROM beneficiaries`).all();
+    }
 
+    static findById(id: string) {
+        return db.query(`SELECT * FROM beneficiaries WHERE id = $id`).get({ id });
+    
 
 }
-
+}
 export default Beneficiary

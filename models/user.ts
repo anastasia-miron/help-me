@@ -1,4 +1,4 @@
-import { randomUUIDv7 } from "bun";
+import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
 
 const db = getDatabase();
@@ -17,7 +17,7 @@ export enum UserTypeEnum {
 }
 
 class User {
-    public id: string = randomUUIDv7();
+    public id: string = v4();
     public username: string = '';
     public email: string = '';
     private _password: string = '';

@@ -1,27 +1,35 @@
 import type { Context } from "hono";
+import Beneficiary from "../models/beneficiary";
+import Request from "../models/request";
 
 export const getBeneficiaries = async (c: Context) => {
-    // TODO: Implement logic to fetch all beneficiaries
-    return c.json({ 
+    const beneficiaries = await Beneficiary.findAll();
+    return c.json({
         success: true,
-        message: "List of beneficiaries", 
+        data: beneficiaries,
     });
 };
 
 export const getBeneficiaryById = async (c: Context) => {
     const { id } = c.req.param();
-    // TODO: Implement logic to fetch a specific beneficiary by ID
+    const beneficiary = await Beneficiary.findById(id);
+
+    if (!beneficiary) {
+        return c.notFound();
+    }
+
     return c.json({
         success: true,
-        message: `Beneficiary ${id} details`,
-});
-}
+        data: beneficiary,
+    });
+};
 
 export const getBeneficiaryRequests = async (c: Context) => {
     const { id } = c.req.param();
-    // TODO: Implement logic to fetch all requests for a specific beneficiary
+    const requests = await Request.findByBeneficiaryId(id);
+
     return c.json({
         success: true,
-        message: `Requests for beneficiary ${id}`,
+        data: requests,
     });
-}
+};

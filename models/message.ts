@@ -1,10 +1,10 @@
-import { randomUUIDv7 } from "bun";
+import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
 
 const db = getDatabase();
 
 class Message {
-    public id: string = randomUUIDv7();
+    public id: string = v4();
     public request_id: string = "";
     public user_id: string = "";
     public content: string = "";

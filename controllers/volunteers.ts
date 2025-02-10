@@ -1,30 +1,35 @@
 import type { Context } from "hono";
+import Volunteer from "../models/volunteer";
+import Request from "../models/request";
 
 export const getVolunteers = async (c: Context) => {
-    // TODO: Implement logic to fetch all volunteers
+    const volunteers = await Volunteer.findAll();
     return c.json({
-        succes: true,
-        message: "List of volunteers",
+        success: true,
+        data: volunteers,
     });
 };
 
 export const getVolunteerById = async (c: Context) => {
     const { id } = c.req.param();
-    // TODO: Implement logic to fetch a specific volunteer by ID
+    const volunteer = await Volunteer.findById(id);
+    
+    if (!volunteer) {
+        return c.notFound();
+    }
+
     return c.json({
         success: true,
-        message:`Volunteer ${id} details`, 
+        data: volunteer,
     });
 };
 
 export const getVolunteerRequests = async (c: Context) => {
     const { id } = c.req.param();
-    // TODO: Implement logic to fetch all requests for a specific volunteer
+    const requests = await Request.findByVolunteerId(id);
+
     return c.json({
         success: true,
-        message:`Requests for volunteer ${id}`,
-});
+        data: requests,
+    });
 };
-
-
-

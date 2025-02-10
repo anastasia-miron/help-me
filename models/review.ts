@@ -1,10 +1,10 @@
-import { randomUUIDv7 } from "bun";
+import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
 
 const db = getDatabase();
 
 class Review {
-    public id: string = randomUUIDv7();
+    public id: string = v4();
     public request_id: string = "";
     public from_id: string = "";
     public to_id: string = "";
@@ -37,7 +37,17 @@ class Review {
         });
     }
 
-    static getByUserId(to_id: string) {
+    update() {
+      db.query(`UPDATE reviews SET rating = $rating, comment = $comment, updated_at = $updated_at WHERE id = $id`)
+      .run({
+        "id": this.id,
+        "rating": this.rating,
+        "comment": this.comment
+    });
+
+
+}
+     static getByUserId(to_id: string) {
         return db.query<Review, { to_id: string }>(
             `SELECT * FROM reviews WHERE to_id = $to_id`
         ).as(Review).all({ to_id });
@@ -47,6 +57,11 @@ class Review {
         return db.query<Review, { from_id: string }>(
             `SELECT * FROM reviews WHERE from_id = $from_id`
         ).as(Review).all({ from_id });
+    }
+    static findById(id: string) {
+        return db.query<Review, { id: string }>(
+            `SELECT * FROM reviews WHERE id = $id`
+        ).as(Review).get({ id });
     }
 }
 

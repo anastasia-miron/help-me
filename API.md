@@ -8,14 +8,14 @@
 - [ ] DELETE /profile
 
 - [x] POST /requests
-- [ ] GET /requests
-- [ ] GET /requests/:id
-- [ ] PUT /requests/:id
-- [ ] PUT /requests/:id/review
+- [x] GET /requests
+- [x] GET /requests/:id
+- [x] PUT /requests/:id
 - [ ] POST /requests/:id/review
-- [ ] POST /requests/:id/accept
-- [ ] POST /requests/:id/cancel
-- [ ] POST /requests/:id/complete
+- [ ] PUT /requests/:id/review/:reviewId
+- [x] POST /requests/:id/accept
+- [x] POST /requests/:id/cancel
+- [x] POST /requests/:id/complete
 
 - [ ] GET /volunteers
 - [ ] GET /volunteers/:id

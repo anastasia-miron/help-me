@@ -14,20 +14,20 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "marusea",
-    "email": "baba@marusea.com",
-    "password": "abcd12"
+    "username": "maria",
+    "email": "maria@gmail.com",
+    "password": "qwe123"
 
 }
 
 
-### Login
+### Login Volunteer
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 Accept: application/json
 
 {
-    "email": "john@doe.com",
+    "email": "maria@gmail.com",
     "password": "qwe123"
 }
 
@@ -55,14 +55,15 @@ Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 
 ### Profile Update
-POST  http://localhost:3000/api/auth/complete
+PUT http://localhost:3000/api/profile
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
-
 {
+    "username": "maria",
+    "email": "maria@gamil.com",
     "type": "volunteer",
     "skills": "rapid si iute",
-    "availability": "24/24"
+    "availability": "9-17"
 }
 
 ### Profile Update
@@ -87,10 +88,10 @@ Content-Type: application/json
 Authorization: Bearer {{tokenB}}
 
 {
-    "title": "Ajutor cu cumparaturile",
+    "title": "Ajutor",
     "description": "Am nevoie de ajutor la supermarket.",
     "urgency": "high",
-    "location": "Strada Mihai Eminescu, nr. 10"
+    "location": "Strada Mihai Eminescu, 9"
 }
 
 ### Requests GET
@@ -99,38 +100,51 @@ Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 
 ### Requests id
-GET http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4
+GET http://localhost:3000/api/requests/{{requestId}}
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 
 ### Update Requests id 
-PUT http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4
+PUT http://localhost:3000/api/requests/{{requestId}}
 Content-Type: application/json
 Authorization: Bearer {{tokenB}}
 
 ### Update Requests Id Review
-PUT http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/review
+PUT http://localhost:3000/api/requests/{{requestId}}/review
 Content-Type: application/json
 Authorization: Bearer {{{{tokenV}}}}
 
-### POST Requests Id Review
-POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/review
+### POST Leave a review for Request as Beneficiar
+POST http://localhost:3000/api/requests/{{requestId}}/review
 Content-Type: application/json
 Authorization: Bearer {{tokenB}}
 
+{
+
+}
+
+### POST Leave a review for Request as Volunteer
+POST http://localhost:3000/api/requests/{{requestId}}/review
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+{
+    
+}
+
 
 ### POST Requests Id Accept
-POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/accept
+POST http://localhost:3000/api/requests/{{requestId}}/accept
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 
 ### POST Requests Id Cancel
-POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/cancel
+POST http://localhost:3000/api/requests/{{requestId}}/cancel
 Content-Type: application/json
 Authorization: Bearer {{tokenB}}
 
 ### POST Requests Id Complete
-POST http://localhost:3000/api/requests/061c55f8-3925-4f9c-afb7-f96da2df5ce4/complete
+POST http://localhost:3000/api/requests/{{requestId}}/complete
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 

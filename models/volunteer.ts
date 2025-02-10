@@ -1,9 +1,9 @@
-import { randomUUIDv7 } from "bun";
+import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
 
 const db = getDatabase();
 class Volunteer {
-    public id: string = randomUUIDv7();
+    public id: string = v4();
     public user_id: string = "";
     public skills: string = "";
     public availability: string = "";
@@ -17,7 +17,14 @@ class Volunteer {
             "availability": this.availability
         })
     }
-}
+        static findAll() {
+            return db.query("SELECT * FROM volunteers").all();
+        }
+    
+        static findById(id: string) {
+            return db.query("SELECT * FROM volunteers WHERE id = ?").get(id);
+        }
+    }
 
 export default Volunteer
 
