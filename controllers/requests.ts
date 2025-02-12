@@ -16,7 +16,7 @@ export const createRequest = async (c: Context) => {
 
     // TODO: Implement logic to create a request
     return c.json({
-        succes: true,
+        success: true,
         message: "Request created successfully!",
         request,
     });
@@ -25,7 +25,7 @@ export const createRequest = async (c: Context) => {
 export const getRequests = async (c: Context) => {
     const requests = Request.findAll();
     return c.json({
-        succes: true,
+        success: true,
         data: requests
     });
 };
@@ -38,7 +38,7 @@ export const getRequestById = async (c: Context) => {
         return c.notFound();
     }
     return c.json({
-        succes: true,
+        success: true,
         data: request
     });
 };
@@ -67,7 +67,7 @@ export const updateRequest = async (c: Context) => {
 
 
     return c.json({
-        succes: true,
+        success: true,
         data: request,
     });
 };
@@ -101,7 +101,7 @@ export const createReviewRequest = async (c: Context) => {
 
     // TODO: Implement logic to review a request
     return c.json({
-        succes: true,
+        success: true,
         message: request,
     });
 };
@@ -125,7 +125,7 @@ export const updateReviewRequest = async (c: Context) => {
     review.update();
 
     return c.json({
-        succes: true,
+        success: true,
         message: review,
     });
 }
@@ -148,7 +148,7 @@ export const acceptRequest = async (c: Context) => {
     request.accept(c.get("user").id);
 
     return c.json({
-        succes: true,
+        success: true,
         data: request
     });
 };
@@ -170,7 +170,7 @@ export const cancelRequest = async (c: Context) => {
     request.cancel();
 
     return c.json({
-        succes: true,
+        success: true,
         data: request,
     });
 };
@@ -194,7 +194,7 @@ export const completeRequest = async (c: Context) => {
     request.complete();
 
     return c.json({
-        succes: true,
+        success: true,
         data: request
     });
 };

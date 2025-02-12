@@ -1,5 +1,7 @@
 import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
+import { JWT_SECRET } from "../constants";
+import jwt from "jsonwebtoken"
 
 const db = getDatabase();
 
@@ -40,18 +42,38 @@ class User {
         return this.password === Bun.hash(password).toString();
     }
 
-    create() {
-        db.query(`INSERT INTO users (id, email, password, username, is_verified, status, created_at) VALUES ($id, $email, $password, $username, $is_verified, $status, $created_at)`)
-        .run({
-            "id": this.id,
-            "is_verified": false,
-            "email": this.email,
-            "password": this._password,
-            "username": this.username,
-            "status": this.status,
-            "created_at": this.created_at.toISOString()
-        })
+    getJwtToken() {
+        return jwt.sign({
+            id: this.id,
+            email: this.email,
+            type: this.type,
+            username: this.username,
+            profileImg: this.profile_img,
+            is_verified: this.is_verified,
+        }, JWT_SECRET, {
+            expiresIn: "1d",
+            issuer: "localhost",
+            audience: "localhost"
+        });
     }
+
+
+    create() {
+        db.query(`INSERT INTO users (id, email, password, username, phone, is_verified, status, created_at) 
+                  VALUES ($id, $email, $password, $username, $phone, $is_verified, $status, $created_at)`)
+            .run({
+                "id": this.id,
+                "is_verified": false,
+                "email": this.email,
+                "password": this._password,
+                "username": this.username,
+                "phone": this.phone, 
+                "status": this.status,
+                "created_at": this.created_at.toISOString()
+            });
+    }
+    
+    
 
     update() {
         db.query(`UPDATE users SET type=$type, status=$status, is_verified=$is_verified, profile_img=$profile_img, phone=$phone WHERE id = $id`)
