@@ -9,7 +9,7 @@ export const getProfile = async (c: Context) => {
     const userId = c.get('user').id;
     const user = db.query(`
         SELECT 
-            u.id, u.username, u.email, u.phone, u.is_verified, u.created_at, u.type, u.profile_img,
+            u.id, u.username, u.email, u.phone, u.is_verified isVerified, u.created_at createdAt, u.type, u.profile_img as profileImg,
             v.skills, v.availability,
             b.needs, b.location
         FROM users u
@@ -37,13 +37,11 @@ export const updateProfile = async (c: Context) => {
     const body = await c.req.json();
     const userId = user.id;
 
-    updateUserQuery.run({
-        username: body.username,
-        email: body.email,
-        phone: body.phone,
-        profile_img: body.profile_img,
-        id: userId
-    });
+    user.username = body.username;
+    user.email = body.email;
+    user.phone = body.phone;
+    user.profile_img = body.profileImg;
+    user.update();
 
     if (user.type === UserTypeEnum.VOLUNTEER) {
         updateVolunteerQuery.run({
@@ -61,7 +59,7 @@ export const updateProfile = async (c: Context) => {
     }
     return c.json({
         success: true,
-        message: "Update with success"
+        data: user.getJwtToken()
     })
 };
 

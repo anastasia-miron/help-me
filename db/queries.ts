@@ -20,8 +20,8 @@ export const findRequestsByVolunteerIdQuery = db.query<Request, { volunteer_id: 
         
 export const findRequestsByBeneficiaryIdQuery = db.query<Request, { beneficiary_id: string }>(`SELECT * FROM requests WHERE beneficiary_id = ?`);      
 
-export const updateUserQuery = db.query<unknown, { username: string; email: string; phone: string; profile_img: string; id: string }>(
-    `UPDATE users SET username = $username, email = $email, phone = $phone, profile_img = $profile_img WHERE id = $id`
+export const updateUserQuery = db.query<unknown, { username: string; email: string; phone: string; profileImg: string; id: string }>(
+    `UPDATE users SET username = $username, email = $email, phone = $phone, profile_img = $profileImg WHERE id = $id`
 );
 
 export const updateVolunteerQuery = db.query<unknown, { skills: string; availability: string; id: string }>(

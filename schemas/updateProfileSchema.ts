@@ -5,11 +5,11 @@ export const updateProfileSchema = z.object({
   username: z.string().min(2, "Username must be at least 2 characters"),
   email: z.string().email("Invalid email format"),
   phone: z.string().length(9, "Phone number must be at least 9 digits").optional(),
-  profile_img: z.string().url("Invalid URL").optional(),
-  skills: z.string().optional(),
-  availability: z.string().optional(),
-  needs: z.string().optional(),
-  location: z.string().optional(),
+  profileImg: z.string().url("Invalid URL").optional(),
+  skills: z.string().nullable().optional(),
+  availability: z.string().nullable().optional(),
+  needs: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
 }).superRefine((data, ctx) => {
   if (!data.skills && !data.needs) {
     ctx.addIssue({
