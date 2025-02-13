@@ -75,7 +75,10 @@ export const completeRegister = async (c: Context) => {
         entity.create();
 
 
-        return c.json({ success: true, data: entity });
+        return c.json({ success: true, data: {
+            entity,
+            token: currentUser.getJwtToken()
+        }});
     }
 
     if (body.type === "volunteer") {
@@ -89,7 +92,10 @@ export const completeRegister = async (c: Context) => {
         currentUser.type = UserTypeEnum.VOLUNTEER;
         currentUser.update();
 
-        return c.json({ success: true, data: entity });
+        return c.json({ success: true, data: {
+            entity,
+            token: currentUser.getJwtToken()
+        }});
     }
     return c.json({ success: false, message: "Registration failed!", });
 }

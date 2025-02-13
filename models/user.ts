@@ -44,12 +44,16 @@ class User {
 
     getJwtToken() {
         return jwt.sign({
-            id: this.id,
-            email: this.email,
-            type: this.type,
-            username: this.username,
-            profileImg: this.profile_img,
-            is_verified: this.is_verified,
+            user: {
+                id: this.id,
+                email: this.email,
+                type: this.type,
+                username: this.username,
+                phone: this.phone,
+                profileImg: this.profile_img,
+                isVerified: this.is_verified,
+                createdAt: this.created_at
+            }
         }, JWT_SECRET, {
             expiresIn: "1d",
             issuer: "localhost",
@@ -67,13 +71,13 @@ class User {
                 "email": this.email,
                 "password": this._password,
                 "username": this.username,
-                "phone": this.phone, 
+                "phone": this.phone,
                 "status": this.status,
                 "created_at": this.created_at.toISOString()
             });
     }
-    
-    
+
+
 
     update() {
         db.query(`UPDATE users SET type=$type, status=$status, is_verified=$is_verified, profile_img=$profile_img, phone=$phone WHERE id = $id`)
