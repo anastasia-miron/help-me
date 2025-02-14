@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { createRequest, getRequests, getRequestById, updateRequest, createReviewRequest,updateReviewRequest,acceptRequest, cancelRequest, completeRequest } from "../controllers/requests";
+import { createRequest, getRequests, getRequestById, updateRequest, createReviewRequest,updateReviewRequest,acceptRequest, cancelRequest, completeRequest, rejectRequest } from "../controllers/requests";
 import { jwtVerify } from "../middlewares/jwtVerify";
 import { beneficiaryGuard, volunteerGuard } from "../middlewares/roleGuard";
 import { zValidator } from "@hono/zod-validator";
@@ -19,6 +19,7 @@ route.post("/:id/review", jwtVerify,  zValidator('json', createReviewSchema), cr
 route.put("/:id/review/:reviewId", jwtVerify, zValidator('json', createReviewSchema), updateReviewRequest);
 route.post("/:id/accept", jwtVerify, volunteerGuard, acceptRequest);
 route.post("/:id/cancel", jwtVerify, beneficiaryGuard, cancelRequest);
+route.post("/:id/reject", jwtVerify, volunteerGuard, rejectRequest);
 route.post("/:id/complete", jwtVerify, volunteerGuard, completeRequest);
 
 export default route;

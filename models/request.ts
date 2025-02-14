@@ -74,7 +74,13 @@ class Request {
             status: this.status
         });
     }
-
+    reject() {
+        this.status = RequestStatusEnum.OPEN;
+        updateRequestStatusQuery.run({
+            id: this.id,
+            status: this.status
+        });
+    }
     cancel() {
         this.status = RequestStatusEnum.CANCELED;
         updateRequestStatusQuery.run({
@@ -82,6 +88,7 @@ class Request {
             status: this.status
         });
     }
+
 
     static findAll() {
         return findAllRequestsQuery.as(Request).all();

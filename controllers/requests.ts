@@ -175,6 +175,28 @@ export const cancelRequest = async (c: Context) => {
     });
 };
 
+export const rejectRequest = async (c: Context) => {
+    const { id } = c.req.param();
+    const request = Request.findById(id);
+    if (!request) {
+        return c.notFound();
+    }
+
+    if (request.status !== RequestStatusEnum.IN_PROGRESS) {
+        return c.json({
+            success: false,
+            message: "Request is not in progress",
+        });
+    }
+
+    request.reject();
+
+    return c.json({
+        success: true,
+        data: request,
+    });
+};
+
 export const completeRequest = async (c: Context) => {
     const { id } = c.req.param();
     const request = Request.findById(id);
