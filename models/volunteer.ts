@@ -18,11 +18,11 @@ class Volunteer {
         })
     }
         static findAll() {
-            return db.query("SELECT * FROM volunteers").all();
+            return db.query("SELECT * FROM volunteers").as(Volunteer).all();
         }
     
         static findById(id: string) {
-            return db.query("SELECT * FROM volunteers WHERE id = ?").get(id);
+            return db.query("SELECT * FROM volunteers WHERE id = ?").as(Volunteer).get(id);
         }
     }
 

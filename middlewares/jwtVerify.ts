@@ -26,7 +26,7 @@ export const jwtVerify = async (c: Context, next: Next) => {
     const authorization = c.req.header('Authorization');
 
     if (!authorization) {
-        return c.json({ message: "Unauthorized", success: false });
+        return c.json({ message: "Unauthorized", success: false }, 401);
     }
 
     const token = authorization.replace('Bearer ', '');
@@ -34,21 +34,21 @@ export const jwtVerify = async (c: Context, next: Next) => {
     try {
         const parsedPayload = jwt.verify(token, JWT_SECRET);
         if (!isPayload(parsedPayload)) {
-            return c.json({ message: "Unauthorized", success: false });
+            return c.json({ message: "Unauthorized", success: false }, 401);
         }
 
         const db = getDatabase();
         const user = db.query<User, { id: string }>('SELECT * FROM users WHERE id = $id').as(User).get({ id: parsedPayload.user.id });
         if (!user) {
-            return c.json({ message: "Unauthorized", success: false });
+            return c.json({ message: "Unauthorized", success: false }, 401);
         }
 
         if (user.status !== "active") {
-            return c.json({ message: "Unauthorized", success: false });
+            return c.json({ message: "Unauthorized", success: false }, 401);
         }
         c.set('user', user);
         return next();
     } catch (error) {
-        return c.json({ message: "Unauthorized", success: false });
+        return c.json({ message: "Unauthorized", success: false }, 401);
     }
 }

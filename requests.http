@@ -27,8 +27,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "email": "maria@gmail.com",
-    "password": "qwe123"
+    "email": "maria123@email.com",
+    "password": "maria123"
 }
 
 ### Login
@@ -175,5 +175,12 @@ Authorization: Bearer {{tokenV}}
 
 ### GET Beneficiars id requests
 GET http://localhost:3000/api/beneficiars/f605cf3c-36cd-40ac-b390-108135c6a82f/requests
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+
+### GET Reviews
+
+GET  http://localhost:3000/api/reviews
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}

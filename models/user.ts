@@ -38,14 +38,9 @@ class User {
         return this.password;
     }
 
-    checkPassword(password: string) {
-        return this.password === Bun.hash(password).toString();
-    }
-
-    getJwtToken() {
-        return jwt.sign({
-            user: {
-                id: this.id,
+    toJSON() {
+        return {
+            id: this.id,
                 email: this.email,
                 type: this.type,
                 username: this.username,
@@ -53,7 +48,16 @@ class User {
                 profileImg: this.profile_img,
                 isVerified: this.is_verified,
                 createdAt: this.created_at
-            }
+        }
+    }
+
+    checkPassword(password: string) {
+        return this.password === Bun.hash(password).toString();
+    }
+
+    getJwtToken() {
+        return jwt.sign({
+            user: this.toJSON(),
         }, JWT_SECRET, {
             expiresIn: "1d",
             issuer: "localhost",
@@ -93,6 +97,10 @@ class User {
 
     static getByEmail(email: string) {
         return db.query<User, { email: string }>(`SELECT * FROM users WHERE email = $email`).as(User).get({ email });
+    }
+
+    static findById(id: string) {
+        return db.query<User, {id: string}>(`SELECT * FROM users WHERE id=$id`).as(User).get({ id });
     }
 }
 

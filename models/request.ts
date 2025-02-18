@@ -1,6 +1,9 @@
 import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
-import { updateRequestStatusQuery, updateRequestQuery, acceptRequestQuery, findAllRequestsQuery, findRequestByIdQuery, findRequestsByBeneficiaryIdQuery, findRequestsByVolunteerIdQuery } from "../db/queries";
+import { updateRequestStatusQuery, updateRequestQuery, handleRequestAssignmentQuery, findAllRequestsQuery, findRequestByIdQuery, findRequestsByBeneficiaryIdQuery, findRequestsByVolunteerIdQuery, findDoneRequestsOfBeneficiaryQuery, findDoneRequestsOfVolunteerQuery } from "../db/queries";
+import Volunteer from "./volunteer";
+import Beneficiary from "./beneficiary";
+import User, { UserTypeEnum } from "./user";
 
 const db = getDatabase();
 
@@ -20,23 +23,37 @@ export enum RequestUrgencyEnum {
 class Request {
     public id: string = v4();
     public beneficiary_id: string = "";
-    public volunteer_id?: string;
+    public volunteer_id?: string | null = null;
     public title: string = "";
     public description: string = "";
     public location: string = "";
     public urgency: string = RequestUrgencyEnum.MEDIUM;
     public status: RequestStatusEnum = RequestStatusEnum.OPEN;
     public created_at: Date = new Date();
-    public beneficiary_name: string  = "";
-    public beneficiary_profile_img: string  = "";
+
+    toJSON() {
+        return {
+            id: this.id,
+            beneficiary_id: this.beneficiary_id,
+            volunteer_id: this.volunteer_id,
+            title: this.title,
+            description: this.description,
+            location: this.location,
+            urgency: this.urgency,
+            status: this.status,
+            created_at: this.created_at,
+            volunteer: this.volunteer_id ? User.findById(this.volunteer_id) : null,
+            beneficiary: this.beneficiary_id ? User.findById(this.beneficiary_id) : null
+        }
+    }
+
 
     create() {
-        db.query(`INSERT INTO requests (id, beneficiary_id, volunteer_id, description, location, status, created_at) 
-                  VALUES ($id, $beneficiary_id, $volunteer_id, $description, $location, $status, $created_at)`)
+        db.query(`INSERT INTO requests (id, beneficiary_id, description, title, location, status, created_at) 
+                  VALUES ($id, $beneficiary_id, $description, $title, $location, $status, $created_at)`)
             .run({
                 "id": this.id,
                 "beneficiary_id": this.beneficiary_id,
-                "volunteer_id": this.volunteer_id || null,
                 "title": this.title,
                 "description": this.description,
                 "location": this.location,
@@ -59,7 +76,7 @@ class Request {
     accept(volunteer_id: string) {
         this.volunteer_id = volunteer_id;
         this.status = RequestStatusEnum.IN_PROGRESS;
-        acceptRequestQuery.run({
+        handleRequestAssignmentQuery.run({
             id: this.id,
             volunteer_id: this.volunteer_id,
             status: this.status
@@ -76,8 +93,10 @@ class Request {
     }
     reject() {
         this.status = RequestStatusEnum.OPEN;
-        updateRequestStatusQuery.run({
+        this.volunteer_id = null;
+        handleRequestAssignmentQuery.run({
             id: this.id,
+            volunteer_id: this.volunteer_id,
             status: this.status
         });
     }
@@ -104,6 +123,16 @@ class Request {
 
     static findByBeneficiaryId(beneficiaryId: string) {
         return findRequestsByBeneficiaryIdQuery.as(Request).all({ beneficiary_id: beneficiaryId });
+    }
+
+    static findCompleted(user: User) {
+        if(user.type === UserTypeEnum.BENEFICIARY) {
+            return findDoneRequestsOfBeneficiaryQuery.as(Request).all({ beneficiary_id: user.id });
+        } 
+        if(user.type === UserTypeEnum.VOLUNTEER) {
+            return findDoneRequestsOfVolunteerQuery.as(Request).all({ volunteer_id: user.id });
+        }
+        return []
     }
 }
 

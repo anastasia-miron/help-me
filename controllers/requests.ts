@@ -1,7 +1,8 @@
 import type { Context } from "hono";
 import Request, { RequestStatusEnum } from "../models/request";
-import Review from "../models/review";
-import { UserTypeEnum } from "../models/user";
+import Review from "../models/reviews";
+import User, { UserTypeEnum } from "../models/user";
+import type { ReviewPayload } from "../types/type";
 
 export const createRequest = async (c: Context) => {
     const body = await c.req.json();
@@ -9,7 +10,7 @@ export const createRequest = async (c: Context) => {
     const request = new Request();
     request.beneficiary_id = c.get("user").id;
     request.title = body.title;
-    request.description = body.description; 
+    request.description = body.description;
     request.location = body.location;
     request.urgency = body.urgency;
     request.create();
@@ -17,8 +18,7 @@ export const createRequest = async (c: Context) => {
     // TODO: Implement logic to create a request
     return c.json({
         success: true,
-        message: "Request created successfully!",
-        request,
+        data: request,
     });
 };
 
@@ -29,6 +29,15 @@ export const getRequests = async (c: Context) => {
         data: requests
     });
 };
+
+export const getRequestsHistory = async (c: Context) => {
+    const user = c.get('user') as User;
+    const requests = Request.findCompleted(user!);
+    return c.json({
+        success: true,
+        data: requests
+    });
+}
 
 export const getRequestById = async (c: Context) => {
     const { id } = c.req.param();
@@ -86,28 +95,35 @@ export const createReviewRequest = async (c: Context) => {
             message: "Request is not completed",
         });
     }
-
     const user = c.get("user");
 
+    let review = Review.findByRequest(request.id, user.id);
 
-    const review = new Review();
-    review.request_id = request.id;
-    review.from_id = c.get("user").id;
-    review.to_id =  user.type === UserTypeEnum.BENEFICIARY ?  request.volunteer_id! : request.beneficiary_id;
-    review.rating = body.rating;
-    review.comment = body.comment;
-    review.create();
-
+    if (!review) {
+        review = new Review();
+        review.request_id = request.id;
+        review.from_id = c.get("user").id;
+        review.to_id = user.type === UserTypeEnum.BENEFICIARY ? request.volunteer_id! : request.beneficiary_id;
+        review.rating = body.rating;
+        review.comment = body.comment;
+        review.create();
+    } else {
+        review.rating = body.rating;
+        review.comment = body.comment;
+        review.update();
+    }
 
     // TODO: Implement logic to review a request
     return c.json({
         success: true,
-        message: request,
+        data: review,
     });
 };
 
+
+
 export const updateReviewRequest = async (c: Context) => {
-    const { id,  reviewId } = c.req.param();
+    const { id, reviewId } = c.req.param();
     const body = await c.req.json();
 
     const request = Request.findById(id);
@@ -126,7 +142,7 @@ export const updateReviewRequest = async (c: Context) => {
 
     return c.json({
         success: true,
-        message: review,
+        data: review,
     });
 }
 
@@ -197,14 +213,22 @@ export const rejectRequest = async (c: Context) => {
     });
 };
 
+const isReviewPayload = (data: unknown): data is ReviewPayload => {
+    if (typeof data !== "object" || data === null) {
+        return false;
+    }
+
+    return Object.keys(data).length > 0;
+}
+
 export const completeRequest = async (c: Context) => {
     const { id } = c.req.param();
+    const body = await c.req.json<ReviewPayload>()
     const request = Request.findById(id);
+    const user = c.get("user");
     if (!request) {
         return c.notFound();
     }
-
- 
 
     if (request.status !== RequestStatusEnum.IN_PROGRESS) {
         return c.json({
@@ -212,7 +236,17 @@ export const completeRequest = async (c: Context) => {
             message: "Request is not in progress",
         });
     }
-    
+
+    if (isReviewPayload(body)) {
+        const review = new Review();
+        review.request_id = request.id;
+        review.from_id = user.id;
+        review.to_id = request.beneficiary_id!;
+        review.rating = body.rating;
+        review.comment = body.comment;
+        review.create();
+    }
+
     request.complete();
 
     return c.json({
