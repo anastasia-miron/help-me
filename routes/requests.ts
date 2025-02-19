@@ -20,7 +20,7 @@ route.post("/:id/review", jwtVerify,  zValidator('json', createReviewSchema), cr
 route.put("/:id/review/:reviewId", jwtVerify, zValidator('json', createReviewSchema), updateReviewRequest);
 route.post("/:id/accept", jwtVerify, volunteerGuard, acceptRequest);
 route.post("/:id/cancel", jwtVerify, beneficiaryGuard, cancelRequest);
-route.post("/:id/reject", jwtVerify, volunteerGuard, rejectRequest);
+route.post("/:id/reject", jwtVerify, rejectRequest);
 route.post("/:id/complete", jwtVerify, volunteerGuard, completeRequest);
 
 export default route;

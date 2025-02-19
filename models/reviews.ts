@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 import { getDatabase } from "../utils/database";
 import User from "./user";
+import Request from "./request";
 
 const db = getDatabase();
 
@@ -33,6 +34,7 @@ class Review {
             rating: this.rating,
             comment: this.comment,
             createdAt: this.created_at,
+            request: Request.findById(this.request_id),
             from: this.from_id ? User.findById(this.from_id) : null,
             to: this.to_id ? User.findById(this.to_id) : null
 
