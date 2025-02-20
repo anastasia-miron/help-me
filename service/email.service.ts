@@ -21,8 +21,6 @@ const config: SMTPTransport.Options = {
     }
 };
 
-console.log(config)
-
 const transporter = nodemailer.createTransport(config);
 
 transporter.once('error', (err) => console.error('SMTP', err));

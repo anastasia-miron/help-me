@@ -4,6 +4,7 @@ import Review from "../models/reviews";
 import User, { UserTypeEnum } from "../models/user";
 import type { ReviewPayload } from "../types/type";
 import pubsub from "../utils/pubsub";
+import Message from "../models/message";
 
 
 
@@ -258,5 +259,47 @@ export const completeRequest = async (c: Context) => {
     return c.json({
         success: true,
         data: request
+    });
+};
+
+
+export const getRequestMessages = async (c: Context) => {
+    const { id } = c.req.param();
+    const request = Request.findById(id);
+    if (!request) {
+        return c.notFound();
+    }
+    const messages = Message.findByRequest(request.id);
+    return c.json({
+        success: true,
+        data: messages,
+    });
+};
+
+export const createRequestMessage = async (c: Context) => {
+    const { id } = c.req.param();
+    const user_id = c.get("user").id;
+    const body = await c.req.json();
+    const request = Request.findById(id);
+    if (!request) {
+        return c.notFound();
+    }
+    if (request.beneficiary_id !== user_id && request.volunteer_id !== user_id) {
+        return c.json({
+            success: false,
+            message: "Forbidden",
+        }, 403);
+    }
+    const message = new Message();
+    message.request_id = request.id;
+    message.user_id = c.get("user").id;
+    message.content = body.content;
+    message.create();
+
+    pubsub.broadcast('message', { message });
+
+    return c.json({
+        success: true,
+        data: message,
     });
 };

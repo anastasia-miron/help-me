@@ -7,7 +7,6 @@ import { asyncLoop } from './utils/asyncTools.ts';
 (async () => {
   const db = getDatabase();
 
-  console.log(db);
   const migrationsDir = path.join(__dirname, './migrations');
   const migrationFiles = readdirSync(migrationsDir)
     .filter(file => file.endsWith('.ts'))

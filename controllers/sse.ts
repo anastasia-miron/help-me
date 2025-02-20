@@ -16,7 +16,12 @@ export const requestSSE = (c: Context) => {
         });
         stream.onAbort(unsubscribe);
         while (true) {
-            await stream.sleep(1000);
+            await stream.sleep(5000); 
+            await stream.writeSSE({
+                event: "ping",
+                data: "",
+                id: v4(),
+            })
         }
     }, async (err) => { console.error(err) });
 }
