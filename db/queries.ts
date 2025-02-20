@@ -1,5 +1,8 @@
 import type { RequestStatusEnum } from "../models/request";
+import type User from "../models/user";
+import type Request from "../models/request";
 import { getDatabase } from "../utils/database";
+import type { UserAvailabilityEnum } from "../models/user";
 
 const db = getDatabase();
 
@@ -26,6 +29,7 @@ export const findAllRequestsQuery = db.query(`
 export const findRequestByIdQuery = db.query<Request, { id: string }>(`SELECT r.*, u.username as beneficiary_name, u.profile_img as beneficiary_profile_img FROM requests r JOIN users u ON u.id = r.beneficiary_id  WHERE r.id = $id`);
         
 export const findRequestsByVolunteerIdQuery = db.query<Request, { volunteer_id: string }>(`SELECT * FROM requests WHERE volunteer_id = $volunteer_id  AND status <> 'done' ORDER BY created_at DESC` );
+export const findRequestsByStatusQuery = db.query<Request, { status: RequestStatusEnum }>(`SELECT * FROM requests WHERE  status = $status ORDER BY created_at DESC LIMIT 5`);
         
 export const findRequestsByBeneficiaryIdQuery = db.query<Request, { beneficiary_id: string }>(`SELECT * FROM requests WHERE beneficiary_id = $beneficiary_id AND status <> 'done' ORDER BY created_at DESC`);      
 
@@ -35,6 +39,8 @@ export const findDoneRequestsOfVolunteerQuery = db.query<Request, { volunteer_id
 export const updateUserQuery = db.query<unknown, { username: string; email: string; phone: string; profileImg: string; id: string }>(
     `UPDATE users SET username = $username, email = $email, phone = $phone, profile_img = $profileImg WHERE id = $id`
 );
+
+export const findActiveVolunteersQuery = db.query<User & { skills: string; availability: UserAvailabilityEnum }, []>(`SELECT * FROM users u LEFT JOIN volunteers v ON v.user_id = u.id WHERE status = 'active' AND type = 'volunteer' `);
 
 export const updateVolunteerQuery = db.query<unknown, { skills: string; availability: string; id: string }>(
  `UPDATE volunteers SET skills = $skills, availability = $availability WHERE user_id = $id`

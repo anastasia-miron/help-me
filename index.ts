@@ -1,15 +1,20 @@
 import { Hono } from "hono";  
 import { cors } from 'hono/cors'
 import route from "./routes";
-import { Database } from "bun:sqlite";
-import { join } from "node:path";
 
+import transporter from "./service/email.service";
+import cron from "./hooks/cron";
 
 const app = new Hono();
+
+// Init Cron jobs
+cron();
+
 app.use("*", cors({
-    origin: '*',
-    allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
-    exposeHeaders: ['Content-Length'],
+    origin: 'http://localhost:5173',
+    // allowHeaders: ['Content-Type', 'Authorization'],
+    // exposeHeaders: ['Content-Type', 'Content-Length', 'Cache-Control', 'X-Accel-Buffering', 'Connection']
+    credentials: true
 }))
 app.route("/api", route);
 

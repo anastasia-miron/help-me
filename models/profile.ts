@@ -1,6 +1,6 @@
 import { getDatabase } from "../utils/database";
 import { v4 } from "uuid";
-import { UserTypeEnum } from "../models/user";
+import { UserTypeEnum, UserAvailabilityEnum } from "../models/user";
 import Review from "./reviews";
 
 const db = getDatabase();
@@ -15,7 +15,7 @@ class Profile {
     public createdAt: Date = new Date();
     public isVerified: boolean = false;
     public skills: string = '';
-    public availability: string = '';
+    public availability: UserAvailabilityEnum = UserAvailabilityEnum.NONE;
     public needs: string = '';
     public location: string = '';
     public rating: number = 0;

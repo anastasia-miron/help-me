@@ -3,6 +3,9 @@ import Request, { RequestStatusEnum } from "../models/request";
 import Review from "../models/reviews";
 import User, { UserTypeEnum } from "../models/user";
 import type { ReviewPayload } from "../types/type";
+import pubsub from "../utils/pubsub";
+
+
 
 export const createRequest = async (c: Context) => {
     const body = await c.req.json();
@@ -14,6 +17,8 @@ export const createRequest = async (c: Context) => {
     request.location = body.location;
     request.urgency = body.urgency;
     request.create();
+
+    pubsub.broadcast('message', { message: 'New request created' });
 
     // TODO: Implement logic to create a request
     return c.json({
@@ -183,6 +188,7 @@ export const cancelRequest = async (c: Context) => {
         });
     }
 
+    pubsub.broadcast('message', { message: 'Request cancelled' });
     request.cancel();
 
     return c.json({

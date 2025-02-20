@@ -18,6 +18,15 @@ export enum UserTypeEnum {
     VOLUNTEER = "volunteer"
 }
 
+export enum UserAvailabilityEnum {
+    FULL_TIME = "full-time",
+    EVENINGS = "evenings",
+    WEEKENDS = "weekends",
+    FLEXIBLE = "flexible",
+    ANY_TIME = "24/24",
+    NONE = ''
+}
+
 class User {
     public id: string = v4();
     public username: string = '';
