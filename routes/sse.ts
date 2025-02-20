@@ -5,6 +5,6 @@ import { requestSSE } from "../controllers/sse";
 
 const route = new Hono();
 
-route.get('/:id', requestSSE);
+route.get('/:id', jwtVerify, requestSSE);
 
 export default route;
