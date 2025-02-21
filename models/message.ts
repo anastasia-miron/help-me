@@ -7,7 +7,7 @@ const db = getDatabase();
 class Message {
     public id: string = v4();
     public request_id: string = "";
-    public user_id: string = "";
+    public user_id: string | null = null;
     public is_system: boolean = false;
     public content: string = "";
     public timestamp: Date = new Date();
@@ -18,9 +18,9 @@ class Message {
             request_id: this.request_id,
             user_id: this.user_id,
             user: this.user_id ? User.findById(this.user_id) : null,
-            is_system: this.is_system,
+            isSystem: this.is_system,
             content: this.content,
-            timestamp: this.timestamp.toISOString()
+            timestamp: this.timestamp
         }
     }
 
@@ -38,7 +38,7 @@ class Message {
     }
 
     static findByRequest (id: string) {
-        return db.prepare(`SELECT * FROM messages WHERE request_id = $request_id ORDER BY timestamp DESC`)
+        return db.prepare(`SELECT * FROM messages WHERE request_id = $request_id ORDER BY timestamp ASC`)
             .as(Message).all({
                 "request_id": id
             });

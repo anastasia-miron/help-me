@@ -80,6 +80,13 @@ export const updateRequest = async (c: Context) => {
     request.urgency = body.urgency;
     request.update();
 
+    const message = new Message();
+    message.is_system = true;
+    message.request_id = request.id;
+    message.content = "Request updated";
+    message.create();
+
+    pubsub.broadcast('message', {message});
 
     return c.json({
         success: true,
@@ -169,6 +176,14 @@ export const acceptRequest = async (c: Context) => {
 
     request.accept(c.get("user").id);
 
+    const message = new Message();
+    message.is_system = true;
+    message.request_id = request.id;
+    message.content = `Request accepted by ${c.get("user").username}`;
+    message.create();
+
+    pubsub.broadcast('message', {message});
+
     return c.json({
         success: true,
         data: request
@@ -189,8 +204,15 @@ export const cancelRequest = async (c: Context) => {
         });
     }
 
-    pubsub.broadcast('message', { message: 'Request cancelled' });
     request.cancel();
+
+    const message = new Message();
+    message.is_system = true;
+    message.request_id = request.id;
+    message.content = `Request cancelled by ${c.get("user").username}`;
+    message.create();
+
+    pubsub.broadcast('message', {message});
 
     return c.json({
         success: true,
@@ -213,6 +235,15 @@ export const rejectRequest = async (c: Context) => {
     }
 
     request.reject();
+
+
+    const message = new Message();
+    message.is_system = true;
+    message.request_id = request.id;
+    message.content = `Request rejected by ${c.get("user").username}`;
+    message.create();
+
+    pubsub.broadcast('message', {message});
 
     return c.json({
         success: true,
@@ -255,6 +286,14 @@ export const completeRequest = async (c: Context) => {
     }
 
     request.complete();
+
+    const message = new Message();
+    message.is_system = true;
+    message.request_id = request.id;
+    message.content = `Request completed by ${c.get("user").username}`;
+    message.create();
+
+    pubsub.broadcast('message', {message});
 
     return c.json({
         success: true,
