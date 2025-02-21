@@ -11,7 +11,7 @@ const app = new Hono();
 cron();
 
 app.use("*", cors({
-    origin: 'http://localhost:5173',
+    origin: '*',
     // allowHeaders: ['Content-Type', 'Authorization'],
     // exposeHeaders: ['Content-Type', 'Content-Length', 'Cache-Control', 'X-Accel-Buffering', 'Connection']
     credentials: true
