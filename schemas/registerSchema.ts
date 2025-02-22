@@ -13,7 +13,16 @@ export const registerSchema = z.object({
     message: 'Passwords must match',
     path: ['repeatPassword'],
 });
-;
+
+export const passwordRecoverySchema = z.object({
+    email: z.string().email('Invalid email format'),
+});
+
+export const passwordChangeSchema = z.object({
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+    token: z.string().min(1, 'Reset token is required'),
+    newPassword: z.string().min(6, 'Password must be at least 6 characters long'),
+});
 
 export const completeRegisterSchema = z.object({
     type: z.enum(["volunteer", "beneficiary"]),

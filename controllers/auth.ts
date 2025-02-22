@@ -100,3 +100,25 @@ export const completeRegister = async (c: Context) => {
     return c.json({ success: false, message: "Registration failed!", });
 }
 
+/**
+ * The requests that receives the email address of the person who forgot their password
+ */
+export const passwordRecovery = (c: Context) => {
+    
+
+    c.json({
+        success: false,
+        message: ''
+    });
+}
+
+/**
+ * the requests that receives the token and the new password
+ */
+export const passwordChange = (c: Context) => {
+    c.json({
+        success: false,
+        message: ''
+    });
+} 
+
