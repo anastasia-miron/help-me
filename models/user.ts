@@ -34,17 +34,19 @@ class User {
     private _password: string = '';
     public is_verified: boolean = false;
     public profile_img: string = '';
-    public status: UserStatusEnum = UserStatusEnum.ACTIVE;
+    public status: UserStatusEnum = UserStatusEnum.INACTIVE;
     public phone: string = '';
     public type: UserTypeEnum = UserTypeEnum.NONE;
     public created_at: Date = new Date();
 
+
     set password(password: string) {
         this._password = Bun.hash(password).toString();
+        console.log(123, this._password, password);
     }
 
     get password() {
-        return this.password;
+        return this._password;
     }
 
     toJSON() {
@@ -74,7 +76,6 @@ class User {
         });
     }
 
-
     create() {
         db.query(`INSERT INTO users (id, email, password, username, phone, is_verified, status, created_at) 
                   VALUES ($id, $email, $password, $username, $phone, $is_verified, $status, $created_at)`)
@@ -103,14 +104,26 @@ class User {
                 "phone": this.phone
             });
     }
-
-    static getByEmail(email: string) {
-        return db.query<User, { email: string }>(`SELECT * FROM users WHERE email = $email`).as(User).get({ email });
+     
+    updatePassword(password: string) {
+        db.query(`UPDATE users SET password = $password WHERE id = $id`)
+            .run({
+                "id": this.id,
+                "password": Bun.hash(password).toString()
+            });
     }
+
+
+    
 
     static findById(id: string) {
         return db.query<User, {id: string}>(`SELECT * FROM users WHERE id=$id`).as(User).get({ id });
     }
+    
+    static getByEmail(email: string) {
+        return db.query<User, { email: string }>(`SELECT * FROM users WHERE email = $email`).as(User).get({ email });
+    }
+
 }
 
 export default User;

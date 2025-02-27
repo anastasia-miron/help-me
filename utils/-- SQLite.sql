@@ -1,1 +1,3 @@
-UPDATE volunteers set availability = '24/24'; 
+
+DELETE FROM migrations WHERE file like '%createTokensTable%';
+DELETE FROM migrations WHERE file like '%addTokenTypeTable%';

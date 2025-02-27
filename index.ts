@@ -4,6 +4,7 @@ import route from "./routes";
 
 import transporter from "./service/email.service";
 import cron from "./hooks/cron";
+import { PORT } from "./env.config";
 
 const app = new Hono();
 
@@ -18,4 +19,7 @@ app.use("*", cors({
 }))
 app.route("/api", route);
 
-export default app;
+export default {
+    fetch: app.fetch,
+    port: PORT
+}

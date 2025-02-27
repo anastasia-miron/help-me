@@ -6,9 +6,9 @@
         <p>{{location}}</p>
         <p>{{urgency}}</p>
         <time>{{created_at}}</time>
-        <a style="padding: 4px 8px; border-radius: 4px; background-color: #444; color: #fff;" href="http://help-me-nu.vercel.app/app/requests/{{id}}">See request</a>
+        <a style="padding: 4px 8px; border-radius: 4px; background-color: #444; color: #fff;" href="{{SITE_URL}}/app/requests/{{id}}">See request</a>
     </article>
     {{/each}}
 
-    <footer><a style="padding: 4px 8px; border-radius: 4px; background-color: #444; color: #fff;" href="http://help-me-nu.vercel.app/app">See all requests</a></footer>
+    <footer><a style="padding: 4px 8px; border-radius: 4px; background-color: #444; color: #fff;" href="{{SITE_URL}}/app">See all requests</a></footer>
 </section> 

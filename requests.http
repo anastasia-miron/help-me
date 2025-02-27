@@ -27,8 +27,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "email": "maria123@email.com",
-    "password": "maria123"
+    "email": "anastasia7miron+maria@gmail.com",
+    "password": "nastea123"
 }
 
 ### Login
@@ -184,3 +184,21 @@ Authorization: Bearer {{tokenV}}
 GET  http://localhost:3000/api/reviews
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
+
+
+### Password reset
+POST http://localhost:3000/api/auth/password-recovery
+Content-Type: application/json
+
+{
+    "email": "anastasia7miron+maria@gmail.com"
+}
+
+### Pasword Change
+POST http://localhost:3000/api/auth/change-password
+Content-Type: application/json
+
+{
+    "token": "bHPjkcAx5gFrmy4o",
+    "newPassword": "nastea123"
+}

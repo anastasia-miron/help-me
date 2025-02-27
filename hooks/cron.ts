@@ -7,6 +7,7 @@ import { sendMail } from "../service/email.service";
 import hbs from 'handlebars';
 import fs from 'node:fs';
 import path from 'node:path';
+import { SITE_URL } from '../env.config';
 
 
 const filepath = path.join(__dirname, '../templates/new-request.hbs');
@@ -39,7 +40,7 @@ export default () => {
             sendMail({
                 to: v.email,
                 subject: 'New requests',
-                message: templateNewRequests({requests})
+                message: templateNewRequests({requests, SITE_URL})
             });
         })
         
