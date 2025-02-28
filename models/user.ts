@@ -112,7 +112,15 @@ class User {
                 "password": Bun.hash(password).toString()
             });
     }
-
+    
+    deleteUser() {
+        this.status = UserStatusEnum.DELETED;
+        db.query(`UPDATE users SET status = $status WHERE id = $id`)
+            .run({
+                "id": this.id,
+                "status": UserStatusEnum.DELETED
+            });
+    }
 
     
 

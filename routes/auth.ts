@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { zValidator } from '@hono/zod-validator'
-import { register, login, logout, completeRegister, passwordRecovery, passwordChange } from "../controllers/auth";
+import { register, login, logout, completeRegister, passwordRecovery, passwordChange, emailValidation, sendVerifyEmail } from "../controllers/auth";
 import { registerSchema, completeRegisterSchema, passwordRecoverySchema, passwordChangeSchema } from "../schemas/registerSchema";
 import { loginSchema } from "../schemas/loginSchema";
 import { jwtVerify } from "../middlewares/jwtVerify";
@@ -13,6 +13,9 @@ route.post("logout", logout);
 route.post("complete", jwtVerify, zValidator('json', completeRegisterSchema, zodCb), completeRegister);
 route.post("password-recovery", zValidator('json', passwordRecoverySchema, zodCb), passwordRecovery);
 route.post("change-password", zValidator('json', passwordChangeSchema, zodCb), passwordChange);
+route.post("verification", emailValidation);
+route.post("send-verify", jwtVerify, sendVerifyEmail);
+
 
 export default route;
 

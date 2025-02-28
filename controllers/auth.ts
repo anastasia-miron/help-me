@@ -11,10 +11,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { sendMail, type SendMailProps } from "../service/email.service";
 import { SITE_URL } from "../env.config";
+import { updateTokensStatusQuery } from "../db/queries";
 
-const filepath = path.join(__dirname, '../templates/password-recovery.hbs');
-const contentNewRequests = fs.readFileSync(filepath, 'utf-8');
-const templatePasswordRecovery = hbs.compile(contentNewRequests);
+const filepathPasswordRecovery = path.join(__dirname, '../templates/password-recovery.hbs');
+const contentPasswordRecovery = fs.readFileSync(filepathPasswordRecovery, 'utf-8');
+const templatePasswordRecovery = hbs.compile(contentPasswordRecovery);
+
+const filepathEmailVerification = path.join(__dirname, '../templates/email-verification.hbs');
+const contentEmailVerification = fs.readFileSync(filepathEmailVerification, 'utf-8');
+const templateEmailVerification = hbs.compile(contentEmailVerification);
 
 
 
@@ -26,18 +31,39 @@ export const register = async (c: Context) => {
     const { email, password, username, phone } = body;
     const user = new User();
     user.email = email;
+    user.status = UserStatusEnum.ACTIVE;
     user.password = password;
     user.username = username;
     user.phone = phone;
+    user.is_verified = false;
 
     try {
         user.create();
-        return c.json({ success: true, data: user.getJwtToken() });
-    } catch (error) {
 
+        const token = new Token();
+        token.user_id = user.id;
+        token.type = TokenTypeEnum.VERIFICATION;
+        token.create();
+
+        console.log("Token:", token.token);
+        console.log("Email:", email);
+
+        const mailOptions: SendMailProps = {
+            to: email,
+            subject: "Verify Your Email",
+            message: templateEmailVerification({
+                token: token.token,
+                SITE_URL,
+                email,
+            }),
+        };
+        await sendMail(mailOptions);
+        return c.json({ success: true, data: user.getJwtToken() });
+
+    } catch (error) {
         return c.json({ success: false, message: "Registration failed!" });
     }
-}
+};
 
 export const login = async (c: Context) => {
     const body = await c.req.json();
@@ -128,6 +154,8 @@ export const passwordRecovery = async (c: Context) => {
             return c.json({ success: false, message: "User not found." }, 404);
         }
 
+        updateTokensStatusQuery.run({userId: user.id, status: TokenStatusEnum.OUTDATED, type: TokenTypeEnum.PASSWORD});
+
         const token = new Token();
         token.user_id = user.id;
         token.type = TokenTypeEnum.PASSWORD;
@@ -151,16 +179,14 @@ export const passwordRecovery = async (c: Context) => {
     }
 };
 
-/**
- * the requests that receives the token and the new password
- */
+
 export const passwordChange = async (c: Context) => {
     try {
         const { token, newPassword } = await c.req.json();
 
         if (!token || !newPassword) {
             return c.json({ success: false, message: "Token and new password are required." }, 400);
-        } 
+        }
 
         const tokenObj = Token.findByToken(token);
         if (!tokenObj || tokenObj.type !== TokenTypeEnum.PASSWORD) {
@@ -178,7 +204,7 @@ export const passwordChange = async (c: Context) => {
         tokenObj.update();
 
         return c.json({ success: true, message: "Password changed successfully." });
-    } 
+    }
 
     catch (error) {
         const err = error as Error;
@@ -190,7 +216,7 @@ export const emailValidation = async (c: Context) => {
     const { token, email } = await c.req.json();
 
     const user = User.getByEmail(email);
-    if(!user) return c.json({success: false});
+    if (!user) return c.json({ success: false });
 
     const tokenObj = Token.findByToken(token);
     if (!tokenObj || tokenObj.user_id !== user.id || tokenObj.type !== TokenTypeEnum.VERIFICATION) {
@@ -202,7 +228,35 @@ export const emailValidation = async (c: Context) => {
     tokenObj.status = TokenStatusEnum.USED;
     tokenObj.update();
 
-    return c.json({ success: true, message: "Email verified successfully!" });
+    return c.json({ success: true, data: "Email verified successfully!" });
 };
 
+export const sendVerifyEmail = async (c: Context) => {
+    const {email, id} = c.get('user');
 
+    updateTokensStatusQuery.run({userId: id, status: TokenStatusEnum.OUTDATED, type: TokenTypeEnum.VERIFICATION});
+
+    const token = new Token();
+    token.user_id = c.get('user').id;
+    token.type = TokenTypeEnum.VERIFICATION;
+    token.create();
+
+    
+
+    try {
+        const mailOptions: SendMailProps = {
+            to: email,
+            subject: "Verify Your Email",
+            message: templateEmailVerification({
+                token: token.token,
+                SITE_URL,
+                email,
+            }),
+        };
+        const res = await sendMail(mailOptions);
+        console.log('email sent', res);
+        return c.json({ success: true, data: {}})
+    } catch (e) {
+        return c.json({ success: false, message: "Failed to send verification email", error: e })
+    }
+}

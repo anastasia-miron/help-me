@@ -1,3 +1,1 @@
-
-DELETE FROM migrations WHERE file like '%createTokensTable%';
-DELETE FROM migrations WHERE file like '%addTokenTypeTable%';
+DELETE FROM users WHERE email = 'buna.ziua.fa@gmail.com'

@@ -3,6 +3,7 @@ import type User from "../models/user";
 import type Request from "../models/request";
 import { getDatabase } from "../utils/database";
 import type { UserAvailabilityEnum } from "../models/user";
+import type { TokenStatusEnum, TokenTypeEnum } from "../models/token";
 
 const db = getDatabase();
 
@@ -49,3 +50,5 @@ export const updateVolunteerQuery = db.query<unknown, { skills: string; availabi
 export const updateBeneficiaryQuery = db.query<unknown, { needs: string; location: string; id: string }>(
     `UPDATE beneficiaries SET needs = $needs, location = $location WHERE user_id = $id`
 );
+
+export const updateTokensStatusQuery = db.query<unknown, {userId: string, status: TokenStatusEnum, type: TokenTypeEnum}>(`UPDATE tokens SET status = $status WHERE user_id = $userId AND type = $type`);
