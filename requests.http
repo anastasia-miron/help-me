@@ -202,3 +202,8 @@ Content-Type: application/json
     "token": "bHPjkcAx5gFrmy4o",
     "newPassword": "nastea123"
 }
+
+### Refresh token
+POST http://localhost:3000/api/auth/refresh-token
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}

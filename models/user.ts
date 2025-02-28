@@ -113,12 +113,12 @@ class User {
             });
     }
     
-    deleteUser() {
-        this.status = UserStatusEnum.DELETED;
+    updateStatus(status: UserStatusEnum) {
+        this.status = status;
         db.query(`UPDATE users SET status = $status WHERE id = $id`)
             .run({
-                "id": this.id,
-                "status": UserStatusEnum.DELETED
+                id: this.id,
+                status 
             });
     }
 

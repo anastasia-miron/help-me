@@ -1,1 +1,1 @@
-DELETE FROM users WHERE email = 'buna.ziua.fa@gmail.com'
+UPDATE users SET username="buna-ziua-fa" WHERE id = 'f1226ddb-af07-4908-a0e5-6ae6ec155a8a';

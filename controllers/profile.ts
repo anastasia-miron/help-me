@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { getDatabase } from "../utils/database";
 import { updateUserQuery, updateVolunteerQuery, updateBeneficiaryQuery } from "../db/queries";
-import { UserTypeEnum } from "../models/user";
+import User, { UserStatusEnum, UserTypeEnum } from "../models/user";
 import Profile from "../models/profile";
 
 const db = getDatabase();
@@ -71,14 +71,16 @@ export const updateProfile = async (c: Context) => {
 };
 
 
+export const updateProfilePassword = async (c: Context) => {
+    const { newPassword } = await c.req.json();
+    const user: User = c.get('user');
+    user.updatePassword(newPassword);
+
+    return c.json({ success: true, data: "Password changed successfully." });
+}
 
 export const deleteProfile = async (c: Context) => {
-    const userId = c.get('user').id;
-
-    db.query<unknown, { id: string }>(`UPDATE users SET account_status = 'deleted' WHERE id = $id`).run({ id: userId });
-
-    return c.json({
-        success: true,
-        data: null
-    });
+    const user = c.get('user');
+    user.updateStatus(UserStatusEnum.DELETED);
+    return c.json({ success: true, data: null });
 };
