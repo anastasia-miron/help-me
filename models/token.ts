@@ -25,6 +25,7 @@ class Token {
     public created_at: string = new Date().toISOString();
     public status: TokenStatusEnum = TokenStatusEnum.ACTIVE;
     public type: TokenTypeEnum = TokenTypeEnum.VERIFICATION;
+    // TO DO: look if i will need here that user is first time on the page flag
 
 
     private generateRandomToken() {

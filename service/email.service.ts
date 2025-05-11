@@ -9,6 +9,8 @@ const content = fs.readFileSync(path.join(__dirname, '../templates/email-templat
 
 const tpl = hbs.compile(content);
 
+
+// TO DO: replace key
 const config: SMTPTransport.Options = {
     host: SMTP_HOSTNAME,
     port: 465,
@@ -19,6 +21,7 @@ const config: SMTPTransport.Options = {
     }
 };
 
+
 const transporter = nodemailer.createTransport(config);
 
 transporter.once('error', (err) => console.error('SMTP', err));
@@ -27,7 +30,7 @@ export interface SendMailProps { subject: string, message: string, to: string};
 
 export const sendMail = (props: SendMailProps) => {
     return transporter.sendMail({
-        from: 'noreply@odajiu.com',
+        from: "bunuconstantinjun@gmail.com",
         to: props.to,
         subject: props.subject,
         html: tpl(props),
