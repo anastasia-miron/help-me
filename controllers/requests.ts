@@ -647,6 +647,7 @@ export async function markMessageRead(c: Context) {
   const user = c.get("user");
   const messageId = c.req.param("messageId");
   Message.markOneRead(user.id, messageId);
+  
   return c.json({ success: true });
 }
 

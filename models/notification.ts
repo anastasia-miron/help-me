@@ -69,11 +69,11 @@ class Notification {
       u.profile_img           AS volunteer_profile_img 
 
     FROM notification n
-       JOIN requests r
+       LEFT JOIN requests r
         ON r.id = n.request_id
-       JOIN reviews rev
+       LEFT JOIN reviews rev
           on rev.request_id = n.request_id
-       JOIN users u
+       LEFT JOIN users u
         ON u.id = n.emiiter_id
        WHERE n.recipient_id = $recipient_id
        ORDER BY timestamp ASC`
@@ -103,11 +103,11 @@ class Notification {
       u.profile_img           AS beneficiary_profile_img 
 
     FROM notification n
-      JOIN requests r
+      LEFT JOIN requests r
         ON r.id = n.request_id
-      JOIN reviews rev
+      LEFT JOIN reviews rev
         on rev.request_id = n.request_id
-      JOIN users u
+      LEFT JOIN users u
         ON u.id = n.emiiter_id
    WHERE recipient_id = $recipient_id
       OR (recipient_role = 'volunteer' AND recipient_id IS NULL)
