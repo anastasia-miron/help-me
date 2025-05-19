@@ -4,7 +4,12 @@ import { UserTypeEnum } from "../models/user";
 import type { NotificationPayload } from "../utils/utils";
 
 export const getNotifications = async (c: Context) => {
-  const { id, type } = c.get("user");
+  const { id, type, is_verified } = c.get("user");
+  console.log(id, type, is_verified);
+  if  (!is_verified)
+  {
+    return c.json({ success: false, message: "User is not verified" });
+  }
   const requests = (await Notification.findByRequest(
     id,
     type

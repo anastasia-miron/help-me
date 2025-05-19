@@ -127,13 +127,7 @@ class Notification {
     this.is_read = true;
   }
 
-  /** delete *this* notification */
-  remove(recipientId: string) {
-    deleteNotificationQuery.run({
-      id: this.id,
-      recipient_id: recipientId,
-    });
-  }
+
 
   /** static shortcut if you only have IDs */
   static markRead(id: string, recipientId: string) {

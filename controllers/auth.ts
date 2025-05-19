@@ -12,7 +12,7 @@ import path from "node:path";
 import { sendMail, type SendMailProps } from "../service/email.service";
 
 import { updateTokensStatusQuery } from "../db/queries";
-const SITE_URL = "http://127.0.0.1:5173/";
+const SITE_URL = "http://localhost:5173";
 
 const filepathPasswordRecovery = path.join(
   __dirname,
@@ -82,8 +82,10 @@ export const register = async (c: Context) => {
     await sendMail(mailOptions);
     return c.json({ success: true, data: user.getJwtToken() });
   } catch (error) {
+    console.log(error);
     return c.json({ success: false, message: "Registration failed!" });
   }
+
 };
 
 export const login = async (c: Context) => {

@@ -1,1 +1,2 @@
-DELETE FROM push_subscriptions;
+DELETE FROM users
+WHERE id = '6205f3c3-23cf-4c2f-8513-768f10daa51a';
