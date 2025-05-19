@@ -294,7 +294,7 @@ export const acceptRequest = async (c: Context) => {
   const message = new Message();
   message.is_system = true;
   message.request_id = request.id;
-  message.content = `Request accepted by ${c.get("user").username}`;
+  message.content = `Cerere acceptată de ${c.get("user").username}`;
   message.create();
 
   const notification = new Notification();

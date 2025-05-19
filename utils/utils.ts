@@ -58,19 +58,18 @@ export const getNotificationMessage = (notification: NotificationPayload) => {
       notification.rating !== 1 ? "s" : ""
     }`;
   }
-
   switch (notification.status) {
     case NotificationStatusEnum.OPEN:
-      return `${actor ? actor + " created a" : "A"} new request`;
+      return `${actor ? actor + " a creat o" : "A fost creată o"} nouă cerere`;
     case NotificationStatusEnum.IN_PROGRESS:
-      return `${actor ? actor + " accepted" : "Request accepted"}`;
+      return `${actor ? actor + " a acceptat" : "Cererea a fost acceptată"}`;
     case NotificationStatusEnum.REJECTED:
-      return `${actor ? actor + " rejected" : "Request rejected"}`;
+      return `${actor ? actor + " a respins" : "Cererea a fost respinsă"}`;
     case NotificationStatusEnum.CANCELED:
-      return `${actor ? actor + " canceled" : "Request canceled"}`;
+      return `${actor ? actor + " a anulat" : "Cererea a fost anulată"}`;
     case NotificationStatusEnum.DONE:
-      return `${actor ? actor + " completed" : "Request completed"}`;
+      return `${actor ? actor + " a finalizat" : "Cererea a fost finalizată"}`;
     default:
-      return `Update on request`;
+      return `Actualizare privind cererea`;
   }
 };
